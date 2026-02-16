@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import {
   Rocket, Mail, ArrowRight, User, Building2, Globe, MapPin, Phone,
   Brain, Calculator, DollarSign, Shield, Lock, Server,
-  Users, CheckCircle, Linkedin, Zap, Eye, AlertTriangle
+  Users, CheckCircle, Linkedin, Zap, Eye, Euro
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -49,17 +49,28 @@ function EmailCapture({ variant = "hero" }: { variant?: "hero" | "footer" }) {
       );
 
       if (!response.ok) {
-        const errorText = await response.text().catch(() => "");
-        throw new Error(errorText || "Unable to submit right now.");
+        let errorPayload: { message?: string } | string | null = null;
+        try {
+          errorPayload = await response.json();
+        } catch {
+          errorPayload = await response.text().catch(() => null);
+        }
+        const message =
+          typeof errorPayload === "string"
+            ? errorPayload
+            : errorPayload?.message;
+
+        throw new Error(message || "Unable to submit right now.");
       }
 
       setSubmitted(true);
       setEmail("");
       setRole(null);
     } catch (error) {
-      setErrorMessage(
-        error instanceof Error ? error.message : "Something went wrong. Please try again."
-      );
+      const text = error instanceof Error
+                ? error.message
+                : "Something went wrong. Please try again.";
+      setErrorMessage(text);
     } finally {
       setIsSubmitting(false);
     }
@@ -166,12 +177,7 @@ function EmailCapture({ variant = "hero" }: { variant?: "hero" | "footer" }) {
         </Button>
       </form>
       {errorMessage && (
-        <p
-          className={cn(
-            "text-xs text-center mt-2",
-            isHero ? "text-rose-500" : "text-rose-400"
-          )}
-        >
+        <p className="text-sm sm:text-sm text-center mt-2 font-medium text-rose-400">
           {errorMessage}
         </p>
       )}
@@ -249,9 +255,8 @@ const offices = [
   {
     city: "New Jersey",
     flag: "🇺🇸",
-    label: "Coming Soon",
-    address: "New Jersey, USA",
-    comingSoon: true,
+    label: "Operations & Talent Hub",
+    address: "42 Mason Ave, East Brunswick, NJ 08816"
   },
 ];
 
@@ -329,8 +334,8 @@ export default function LaunchingSoon() {
             className="grid md:grid-cols-3 gap-6 mt-14 max-w-4xl mx-auto"
           >
             {[
-              { icon: AlertTriangle, title: "Local Hiring", desc: "High salaries, expensive benefits, limited talent pool", color: "text-destructive" },
-              { icon: Eye, title: "Outsourcing", desc: "Hidden markups, lack of transparency, quality concerns", color: "text-warning" },
+              { icon: Euro, title: "Local Hiring", desc: "High salaries, expensive benefits, limited talent pool", color: "text-destructive" },
+              { icon: Eye, title: "Outsourcing", desc: "Hidden markups, lack of transparency, and quality concerns", color: "text-warning" },
               { icon: Zap, title: "Freelancing", desc: "No commitment, inconsistent quality, no team culture", color: "text-muted-foreground" },
             ].map((item, i) => (
               <motion.div key={item.title} variants={fadeUp} custom={i} className="bg-card rounded-2xl p-6 border border-border shadow-sm text-center">
@@ -362,7 +367,7 @@ export default function LaunchingSoon() {
               Meet <span className="gradient-text pb-2 inline-block">Infinity Teams</span>
             </motion.h2>
             <motion.p variants={fadeUp} custom={2} className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              We make hiring global talent as simple as hiring locally — at a fraction of the cost, with full transparency.
+              We make hiring global talent as simple as hiring locally at a fraction of the cost, with full transparency.
             </motion.p>
           </motion.div>
 
@@ -374,9 +379,9 @@ export default function LaunchingSoon() {
             className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto"
           >
             {[
-              { icon: DollarSign, title: "Transparent Pricing", desc: "Salary + €349/mo fixed fee. No hidden markups." },
+              { icon: Euro, title: "Transparent Pricing", desc: "Salary + €349/mo fixed fee. No hidden markups." },
               { icon: Users, title: "Full Recruitment", desc: "We source, vet, and onboard top talent for you." },
-              { icon: Shield, title: "Compliance & HR", desc: "Payroll, taxes, contracts — all handled." },
+              { icon: Shield, title: "Compliance & HR", desc: "Payroll, taxes, contracts: all handled." },
               { icon: Server, title: "Office & IT", desc: "Fully equipped workspace and infrastructure." },
             ].map((item, i) => (
               <motion.div key={item.title} variants={fadeUp} custom={i} className="bg-card rounded-2xl p-6 border border-border card-elevated text-center">
@@ -461,10 +466,7 @@ export default function LaunchingSoon() {
                 key={office.city}
                 variants={fadeUp}
                 custom={i}
-                className={cn(
-                  "bg-card rounded-2xl p-6 border border-border shadow-sm",
-                  office.comingSoon && "opacity-60"
-                )}
+                className="bg-card rounded-2xl p-6 border border-border shadow-sm"
               >
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-2xl">{office.flag}</span>
@@ -485,11 +487,6 @@ export default function LaunchingSoon() {
                         {office.phone}
                       </a>
                     </div>
-                  )}
-                  {office.comingSoon && (
-                    <span className="inline-block text-[10px] font-semibold uppercase tracking-wider bg-accent/15 text-accent px-2 py-0.5 rounded mt-1">
-                      Coming Soon
-                    </span>
                   )}
                 </div>
               </motion.div>
@@ -512,7 +509,7 @@ export default function LaunchingSoon() {
               Built as a <span className="gradient-text pb-2 inline-block">Technology Platform</span>
             </motion.h2>
             <motion.p variants={fadeUp} custom={1} className="text-muted-foreground text-lg">
-              Not just a service — a complete hiring infrastructure.
+              Not just a service, but a complete hiring infrastructure.
             </motion.p>
           </motion.div>
 

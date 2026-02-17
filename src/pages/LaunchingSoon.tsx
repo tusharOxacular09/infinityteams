@@ -153,7 +153,7 @@ function EmailCapture({ variant = "hero" }: { variant?: "hero" | "footer" }) {
           )} />
           <Input
             type="email"
-            placeholder="Enter your work email"
+            placeholder={role == "client" ? "Enter your business email" : "Enter your email"}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required

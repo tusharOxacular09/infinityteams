@@ -68,8 +68,8 @@ function EmailCapture({ variant = "hero" }: { variant?: "hero" | "footer" }) {
       setRole(null);
     } catch (error) {
       const text = error instanceof Error
-                ? error.message
-                : "Something went wrong. Please try again.";
+        ? error.message
+        : "Something went wrong. Please try again.";
       setErrorMessage(text);
     } finally {
       setIsSubmitting(false);
@@ -244,6 +244,7 @@ const offices = [
     label: "EU Headquarters",
     address: "Isaäc Asscherpad 11, 1096 BJ Amsterdam",
     phone: "+31 20 8080 486",
+    email: "netherlands@infinityteams.com"
   },
   {
     city: "Mumbai",
@@ -251,12 +252,14 @@ const offices = [
     label: "Operations & Talent Hub",
     address: "Lumos Cowork, Andheri East, Mumbai 400069",
     phone: "+91 77746 71788",
+    email: "india@infinityteams.com"
   },
   {
     city: "New Jersey",
     flag: "🇺🇸",
     label: "Operations & Talent Hub",
-    address: "42 Mason Ave, East Brunswick, NJ 08816"
+    address: "42 Mason Ave, East Brunswick NJ 08816",
+    email: "usa@infinityteams.com"
   },
 ];
 
@@ -485,6 +488,17 @@ export default function LaunchingSoon() {
                       <Phone className="h-3.5 w-3.5 text-accent shrink-0" />
                       <a href={`tel:${office.phone.replace(/\s/g, "")}`} className="text-sm text-muted-foreground hover:text-accent transition-colors">
                         {office.phone}
+                      </a>
+                    </div>
+                  )}
+                  {office.email && (
+                    <div className="flex items-center gap-2">
+                      <Mail className="h-3.5 w-3.5 text-accent shrink-0" />
+                      <a
+                        href={`mailto:${office.email}`}
+                        className="text-sm text-muted-foreground hover:text-accent transition-colors"
+                      >
+                        {office.email}
                       </a>
                     </div>
                   )}

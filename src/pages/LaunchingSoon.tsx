@@ -1,14 +1,57 @@
 import { motion } from "framer-motion";
 import {
   Rocket, Mail, ArrowRight, User, Building2, Globe, MapPin, Phone,
-  Brain, Calculator, DollarSign, Shield, Lock, Server,
-  Users, CheckCircle, Linkedin, Zap, Eye, Euro
+  DollarSign, Shield, Server, Users, CheckCircle, Linkedin, Zap, Eye, Euro,
+  PiggyBank, Settings, ShieldCheck, Headphones
 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import infinityTeamsLogo from "@/assets/light-logo.svg";
+
+const features = [
+  {
+    icon: DollarSign,
+    title: "Transparent Cost-Plus Pricing",
+    description: "See real employee salaries upfront. You pay the actual salary plus a flat monthly fee. No markups. No hidden costs.",
+  },
+  {
+    icon: PiggyBank,
+    title: "Up to 70% Cost Savings",
+    description: "Build world-class teams while saving up to 70% compared to local hiring and up to 30% versus traditional outsourcing.",
+  },
+  {
+    icon: Users,
+    title: "Full-Time Dedicated Talent",
+    description: "Your team works exclusively for you. No freelancers, no shared resources, and no divided attention.",
+  },
+  {
+    icon: Settings,
+    title: "Fully Managed Operations",
+    description: "We handle recruitment, HR, payroll, compliance, benefits, and performance management from day one.",
+  },
+  {
+    icon: Building2,
+    title: "Office-Based Teams",
+    description: "Your talent works from modern, professionally managed offices with secure infrastructure and high-speed connectivity.",
+  },
+  {
+    icon: Zap,
+    title: "Fast Hiring",
+    description: "Get shortlisted candidates in as little as 8 hours. Average time to hire is just 14 days.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Flexible and Risk Free",
+    description: "Scale your team up or down with just one month's notice. No long-term contracts and no penalties.",
+  },
+  {
+    icon: Headphones,
+    title: "End-to-End Support",
+    description: "Every client gets a dedicated account manager and continuous operational support for long-term success.",
+  },
+];
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
@@ -103,7 +146,7 @@ function EmailCapture({ variant = "hero" }: { variant?: "hero" | "footer" }) {
             variant === "hero" ? "text-muted-foreground" : "text-primary-foreground/60"
           )}
         >
-          We'll notify you before our March 9, 2026 launch.
+          We'll notify you before our March 2026 launch.
         </p>
       </motion.div>
     );
@@ -228,15 +271,6 @@ function WorldMapBackground() {
   );
 }
 
-const techFeatures = [
-  { icon: Brain, label: "AI-Powered Talent Matching" },
-  { icon: Calculator, label: "Smart Salary Calculator" },
-  { icon: DollarSign, label: "Multi-Currency Pricing" },
-  { icon: Shield, label: "Role-Based Access" },
-  { icon: Lock, label: "Secure Platform" },
-  { icon: Server, label: "Scalable Infrastructure" },
-];
-
 const offices = [
   {
     city: "Amsterdam",
@@ -288,7 +322,7 @@ export default function LaunchingSoon() {
           >
             <motion.div variants={fadeUp} custom={0} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/20 border border-accent/30 text-accent text-sm font-semibold">
               <Rocket className="h-4 w-4" />
-              Launching March 9, 2026
+              Launching March 2026
             </motion.div>
 
             <motion.h1 variants={fadeUp} custom={1} className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-[1.1] tracking-tight">
@@ -527,19 +561,20 @@ export default function LaunchingSoon() {
             </motion.p>
           </motion.div>
 
-          <motion.div
+           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={stagger}
-            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-4xl mx-auto"
+            className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto"
           >
-            {techFeatures.map((f, i) => (
-              <motion.div key={f.label} variants={fadeUp} custom={i} className="flex items-center gap-3 bg-card rounded-xl p-4 border border-border shadow-sm">
-                <div className="p-2 rounded-lg bg-accent/10 text-accent shrink-0">
-                  <f.icon className="h-5 w-5" />
+            {features.map((item, i) => (
+              <motion.div key={item.title} variants={fadeUp} custom={i} className="bg-card rounded-2xl p-6 border border-border card-elevated text-center">
+                <div className="inline-flex p-3 rounded-xl bg-accent/10 text-accent mb-4">
+                  <item.icon className="h-5 w-5" />
                 </div>
-                <span className="font-medium text-foreground text-sm">{f.label}</span>
+                <h3 className="font-display font-semibold text-foreground mb-2">{item.title}</h3>
+                <p className="text-sm text-muted-foreground">{item.description}</p>
               </motion.div>
             ))}
           </motion.div>
@@ -618,7 +653,7 @@ export default function LaunchingSoon() {
               <span className="gradient-text-hero pb-2 inline-block">Has No Borders.</span>
             </motion.h2>
             <motion.p variants={fadeUp} custom={1} className="text-primary-foreground/60 text-lg">
-              Early access available before our March 9, 2026 launch.
+              Early access available before our March 2026 launch.
             </motion.p>
             <motion.div variants={fadeUp} custom={2}>
               <EmailCapture variant="footer" />

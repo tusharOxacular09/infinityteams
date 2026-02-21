@@ -601,7 +601,7 @@ export default function LaunchingSoon() {
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={stagger}
-            className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto"
+            className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto"
           >
             {/* For Companies */}
             <motion.div variants={fadeUp} custom={0} className="bg-card rounded-2xl p-8 border border-border card-elevated">
@@ -610,7 +610,18 @@ export default function LaunchingSoon() {
               </div>
               <h3 className="font-display text-xl font-bold text-foreground mb-4">For Companies</h3>
               <ul className="space-y-3">
-                {["Reduce hiring costs up to 70%", "Build long-term, dedicated teams", "Fully managed compliance & payroll"].map((item) => (
+                {[
+                  "Hire global full-time talent for a flat monthly fee.",
+                  "Save up to 70% vs local hiring and 30% vs outsourcing.",
+                  "We handle hiring, payroll, HR, and compliance end-to-end.",
+                  "Scale your team with 1-month notice—no lock-ins.",
+                  "View real salaries and profiles before hiring.",
+                  "Get screened candidates fast (hours to days).",
+                  "One predictable monthly invoice per hire.",
+                  "Calculate hourly cost in your local currency instantly.",
+                  "Office setup included: IT, equipment, and support.",
+                  "Lower risk: contracts, taxes, insurance, and admin covered.",
+                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-muted-foreground">
                     <CheckCircle className="h-4 w-4 text-accent mt-0.5 shrink-0" />
                     <span className="text-sm">{item}</span>
@@ -626,7 +637,18 @@ export default function LaunchingSoon() {
               </div>
               <h3 className="font-display text-xl font-bold text-foreground mb-4">For Candidates</h3>
               <ul className="space-y-3">
-                {["Work with global companies remotely", "Competitive international salaries", "Stable, full-time employment"].map((item) => (
+                {[
+                  "Work directly with global companies remotely.",
+                  "Learn Western work culture: clarity and ownership.",
+                  "Build real products, not just support work.",
+                  "Grow with global tools and best practices.",
+                  "Improve fast with meaningful work and feedback.",
+                  "Better work-life balance with modern teams.",
+                  "Get global exposure and travel opportunities.",
+                  "Build a strong profile for international employers.",
+                  "Gain world-class experience to boost your career.",
+                  "Ship impactful features and see your results.",
+                 ].map((item) => (
                   <li key={item} className="flex items-start gap-2.5 text-muted-foreground">
                     <CheckCircle className="h-4 w-4 text-accent mt-0.5 shrink-0" />
                     <span className="text-sm">{item}</span>

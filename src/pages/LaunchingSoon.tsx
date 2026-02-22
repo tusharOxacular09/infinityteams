@@ -1,10 +1,10 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import {
   Rocket, Mail, ArrowRight, User, Building2, Globe, MapPin, Phone,
   DollarSign, Shield, Server, Users, CheckCircle, Linkedin, Zap, Eye, Euro,
-  PiggyBank, Settings, ShieldCheck, Headphones
+  PiggyBank, Settings, ShieldCheck, Headphones, Upload, FileText, X, CheckCircle2
 } from "lucide-react";
-import { useState } from "react";
+import { useId, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -71,6 +71,46 @@ function EmailCapture({ variant = "hero" }: { variant?: "hero" | "footer" }) {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [cvFile, setCvFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const cvUploadId = useId();
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const validTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+    const fileName = file.name.toLowerCase();
+    const hasValidExt = [".pdf", ".doc", ".docx"].some((ext) => fileName.endsWith(ext));
+    const hasValidType = validTypes.includes(file.type) || (file.type === "" && hasValidExt);
+
+    if (!hasValidType) {
+      alert("Please upload a PDF or Word document.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Please upload a file smaller than 5MB.");
+      return;
+    }
+    setCvFile(file);
+  };
+
+  const removeCv = () => {
+    setCvFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleRoleChange = (newRole: "candidate" | "client") => {
+    setRole(newRole);
+    if (newRole === "client") {
+      setCvFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,12 +122,18 @@ function EmailCapture({ variant = "hero" }: { variant?: "hero" | "footer" }) {
     setErrorMessage(null);
 
     try {
+      const formData = new FormData();
+      formData.append("Email", email);
+      formData.append("Role", role);
+      if (role === "candidate" && cvFile) {
+        formData.append("File", cvFile, cvFile.name);
+      }
+
       const response = await fetch(
         "https://vaibhavarora2-001-site17.anytempurl.com/api/EarlyAccess/register",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, role }),
+          body: formData,
         }
       );
 
@@ -109,6 +155,8 @@ function EmailCapture({ variant = "hero" }: { variant?: "hero" | "footer" }) {
       setSubmitted(true);
       setEmail("");
       setRole(null);
+      setCvFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (error) {
       const text = error instanceof Error
         ? error.message
@@ -153,13 +201,20 @@ function EmailCapture({ variant = "hero" }: { variant?: "hero" | "footer" }) {
   }
 
   const isHero = variant === "hero";
+  const isCandidate = role === "candidate";
+
+  const cvFileIcon = () => {
+    if (!cvFile) return null;
+    if (cvFile.type.includes("pdf") || cvFile.name.toLowerCase().endsWith(".pdf")) return "📄";
+    return "📝";
+  };
 
   return (
     <div className="space-y-4 max-w-lg mx-auto">
       <div className="flex gap-3">
         <button
           type="button"
-          onClick={() => setRole("client")}
+          onClick={() => handleRoleChange("client")}
           className={cn(
             "flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 transition-all duration-200 font-medium text-sm",
             role === "client"
@@ -174,7 +229,7 @@ function EmailCapture({ variant = "hero" }: { variant?: "hero" | "footer" }) {
         </button>
         <button
           type="button"
-          onClick={() => setRole("candidate")}
+          onClick={() => handleRoleChange("candidate")}
           className={cn(
             "flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 transition-all duration-200 font-medium text-sm",
             role === "candidate"
@@ -188,36 +243,141 @@ function EmailCapture({ variant = "hero" }: { variant?: "hero" | "footer" }) {
           I'm Looking for a Job
         </button>
       </div>
-      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <Mail className={cn(
-            "absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4",
-            isHero ? "text-muted-foreground/50" : "text-primary-foreground/30"
-          )} />
-          <Input
-            type="email"
-            placeholder={role == "client" ? "Enter your business email" : "Enter your email"}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className={cn(
-              "pl-10 h-12 rounded-xl",
-              isHero
-                ? "bg-background border-border"
-                : "bg-primary-foreground/5 border-primary-foreground/15 text-primary-foreground placeholder:text-primary-foreground/30"
-            )}
-          />
+
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <Mail className={cn(
+              "absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4",
+              isHero ? "text-muted-foreground/50" : "text-primary-foreground/30"
+            )} />
+            <Input
+              type="email"
+              placeholder={role === "client" ? "Enter your business email" : "Enter your email"}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className={cn(
+                "pl-10 h-12 rounded-xl",
+                isHero
+                  ? "bg-background border-border"
+                  : "bg-primary-foreground/5 border-primary-foreground/15 text-primary-foreground placeholder:text-primary-foreground/30"
+              )}
+            />
+          </div>
+
+          {!isCandidate && (
+            <Button
+              type="submit"
+              variant="cta"
+              size="lg"
+              className="gap-2 h-12 rounded-xl px-6"
+              disabled={!role || isSubmitting}
+            >
+              {isSubmitting ? "Submitting..." : "Get Early Access"}
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          )}
         </div>
-        <Button
-          type="submit"
-          variant="cta"
-          size="lg"
-          className="gap-2 h-12 rounded-xl px-6"
-          disabled={!role || isSubmitting}
-        >
-          {isSubmitting ? "Submitting..." : "Get Early Access"}
-          <ArrowRight className="h-4 w-4" />
-        </Button>
+
+        {/* CV Upload — candidates only */}
+        <AnimatePresence>
+          {isCandidate && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".pdf,.doc,.docx"
+                onChange={handleFileSelect}
+                className="hidden"
+                id={cvUploadId}
+              />
+
+              {!cvFile ? (
+                <label
+                  htmlFor={cvUploadId}
+                  className={cn(
+                    "flex items-center gap-3 px-4 py-3.5 rounded-xl border-2 border-dashed cursor-pointer transition-all duration-200",
+                    isHero
+                      ? "border-border hover:border-accent/50 bg-muted/30 hover:bg-accent/5"
+                      : "border-primary-foreground/20 hover:border-accent/50 bg-primary-foreground/5 hover:bg-primary-foreground/10"
+                  )}
+                >
+                  <div className="p-2 rounded-lg bg-accent/10 text-accent">
+                    <Upload className="h-4 w-4" />
+                  </div>
+                  <div className="flex-1 text-left">
+                    <p className={cn("text-sm font-medium", isHero ? "text-foreground" : "text-primary-foreground")}>
+                      Upload your CV{" "}
+                      <span
+                        className={cn(
+                          "font-normal text-xs",
+                          isHero ? "text-muted-foreground" : "text-primary-foreground/50"
+                        )}
+                      >
+                        (optional)
+                      </span>
+                    </p>
+                    <p className={cn("text-xs mt-0.5", isHero ? "text-muted-foreground" : "text-primary-foreground/40")}>
+                      PDF or Word · max 5MB
+                    </p>
+                  </div>
+                  <FileText className={cn("h-4 w-4 shrink-0", isHero ? "text-muted-foreground/40" : "text-primary-foreground/20")} />
+                </label>
+              ) : (
+                <div
+                  className={cn(
+                    "flex items-center gap-3 px-4 py-3.5 rounded-xl border",
+                    isHero ? "border-accent/30 bg-accent/5" : "border-accent/30 bg-accent/10"
+                  )}
+                >
+                  <span className="text-xl shrink-0">{cvFileIcon()}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className={cn("text-sm font-medium truncate", isHero ? "text-foreground" : "text-primary-foreground")}>
+                      {cvFile.name}
+                    </p>
+                    <p className={cn("text-xs mt-0.5", isHero ? "text-muted-foreground" : "text-primary-foreground/50")}>
+                      {(cvFile.size / 1024).toFixed(1)} KB
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <CheckCircle2 className="h-4 w-4 text-accent" />
+                    <button
+                      type="button"
+                      onClick={removeCv}
+                      className={cn(
+                        "p-1 rounded-lg transition-colors",
+                        isHero
+                          ? "hover:bg-muted text-muted-foreground hover:text-destructive"
+                          : "hover:bg-primary-foreground/10 text-primary-foreground/40 hover:text-destructive"
+                      )}
+                      aria-label="Remove CV"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                variant="cta"
+                size="lg"
+                className="w-full gap-2 h-12 rounded-xl mt-3"
+                disabled={!role || isSubmitting}
+              >
+                {isSubmitting ? "Submitting..." : "Get Early Access"}
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </form>
       {errorMessage && (
         <p className="text-sm sm:text-sm text-center mt-2 font-medium text-rose-400">

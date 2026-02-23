@@ -445,7 +445,7 @@ const offices = [
     flag: "🇮🇳",
     label: "Operations & Talent Hub",
     address: "Lumos Cowork, Andheri East, Mumbai 400069",
-    phone: "+91 77746 71788",
+    phone: "+91 9867662193",
     email: "india@infinityteams.com"
   },
   {

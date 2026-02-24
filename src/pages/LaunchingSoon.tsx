@@ -97,6 +97,7 @@ function EmailCapture({ variant = "hero" }: { variant?: "hero" | "footer" }) {
       return;
     }
     setCvFile(file);
+    setErrorMessage(null);
   };
 
   const removeCv = () => {
@@ -118,6 +119,11 @@ function EmailCapture({ variant = "hero" }: { variant?: "hero" | "footer" }) {
       return;
     }
 
+    if (role === "candidate" && !cvFile) {
+      setErrorMessage("Please upload your CV to continue.");
+      return;
+    }
+
     setIsSubmitting(true);
     setErrorMessage(null);
 
@@ -125,7 +131,8 @@ function EmailCapture({ variant = "hero" }: { variant?: "hero" | "footer" }) {
       const formData = new FormData();
       formData.append("Email", email);
       formData.append("Role", role);
-      if (role === "candidate" && cvFile) {
+      if (role === "candidate") {
+        if (!cvFile) throw new Error("Please upload your CV to continue.");
         formData.append("File", cvFile, cvFile.name);
       }
 
@@ -321,7 +328,7 @@ function EmailCapture({ variant = "hero" }: { variant?: "hero" | "footer" }) {
                           isHero ? "text-muted-foreground" : "text-primary-foreground/50"
                         )}
                       >
-                        (optional)
+                        (required)
                       </span>
                     </p>
                     <p className={cn("text-xs mt-0.5", isHero ? "text-muted-foreground" : "text-primary-foreground/40")}>
@@ -370,7 +377,7 @@ function EmailCapture({ variant = "hero" }: { variant?: "hero" | "footer" }) {
                 variant="cta"
                 size="lg"
                 className="w-full gap-2 h-12 rounded-xl mt-3"
-                disabled={!role || isSubmitting}
+                disabled={!cvFile || isSubmitting}
               >
                 {isSubmitting ? "Submitting..." : "Get Early Access"}
                 <ArrowRight className="h-4 w-4" />

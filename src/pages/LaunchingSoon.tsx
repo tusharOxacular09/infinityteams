@@ -460,6 +460,7 @@ const offices = [
     flag: "🇺🇸",
     label: "Operations & Talent Hub",
     address: "42 Mason Ave, East Brunswick NJ 08816",
+    phone: "+1 818-212-0711",
     email: "usa@infinityteams.com"
   },
 ];

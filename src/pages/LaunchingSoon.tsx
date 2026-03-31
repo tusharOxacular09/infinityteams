@@ -201,7 +201,7 @@ function EmailCapture({ variant = "hero" }: { variant?: "hero" | "footer" }) {
             variant === "hero" ? "text-muted-foreground" : "text-primary-foreground/60"
           )}
         >
-          We'll notify you before our March 2026 launch.
+          We'll notify you before our April 2026 launch.
         </p>
       </motion.div>
     );
@@ -490,7 +490,7 @@ export default function LaunchingSoon() {
           >
             <motion.div variants={fadeUp} custom={0} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/20 border border-accent/30 text-accent text-sm font-semibold">
               <Rocket className="h-4 w-4" />
-              Launching March 2026
+              Launching April 2026
             </motion.div>
 
             <motion.h1 variants={fadeUp} custom={1} className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-primary-foreground leading-[1.1] tracking-tight">
@@ -843,7 +843,7 @@ export default function LaunchingSoon() {
               <span className="gradient-text-hero pb-2 inline-block">Has No Borders.</span>
             </motion.h2>
             <motion.p variants={fadeUp} custom={1} className="text-primary-foreground/60 text-lg">
-              Early access available before our March 2026 launch.
+              Early access available before our April 2026 launch.
             </motion.p>
             <motion.div variants={fadeUp} custom={2}>
               <EmailCapture variant="footer" />
